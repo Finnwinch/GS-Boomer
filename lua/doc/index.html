@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Documentation SWEP Boomer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#serveur">Serveur</a></li>
+      <li><a href="#client">Client</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="serveur">
+      <h1>Section Serveur</h1>
+      <p><strong>Net messages déclarés :</strong></p>
+      <ul>
+        <li><code>shareTimeBoomer</code></li>
+        <li><code>boomer_defuse_start</code></li>
+        <li><code>boomer_defuse_stop</code></li>
+      </ul>
+
+      <h2>Fonctions SWEP</h2>
+
+      <article>
+        <h3>_getAllowedTimeRange(ply)</h3>
+        <ul>
+          <li><strong>Argument :</strong> <code>ply</code> (Player)</li>
+          <li><strong>Retourne :</strong> Deux entiers (min, max) correspondant à la plage de temps autorisée</li>
+        </ul>
+        <p>Renvoie une plage de délai pour la bombe selon le groupe du joueur. VIP a plus de flexibilité.</p>
+      </article>
+
+      <article>
+        <h3>Initialize()</h3>
+        <p>Appelée lors de l'initialisation de l'arme. Réinitialise les données internes.</p>
+      </article>
+
+      <article>
+        <h3>ResetData()</h3>
+        <p>Réinitialise l’état de la bombe : non plantée, délai à 10s, et désactive les états réseau.</p>
+      </article>
+
+      <article>
+        <h3>net.Receive("shareTimeBoomer")</h3>
+        <p>Lit le délai envoyé par le client et le valide. Définit ensuite le nouveau délai d'explosion sur l'arme.</p>
+      </article>
+
+      <article>
+        <h3>CreateExplosion(pos, owner)</h3>
+        <ul>
+          <li><strong>Arguments :</strong> <code>pos</code> (Vector), <code>owner</code> (Player)</li>
+        </ul>
+        <p>Crée une explosion à une position donnée avec une magnitude de 350. Ne retourne rien.</p>
+      </article>
+
+      <article>
+        <h3>ExplodeBomb()</h3>
+        <p>Fait exploser la bombe posée. Supprime l’entité bombe et retire l’arme au joueur.</p>
+      </article>
+
+      <article>
+        <h3>ExplodePlayer()</h3>
+        <p>Fait exploser le joueur lui-même si la bombe n’est pas posée. Supprime aussi l’arme.</p>
+      </article>
+
+      <article>
+        <h3>TriggerBomb()</h3>
+        <p>Démarre un timer pour l’explosion (joueur ou bombe selon <code>planted</code>).</p>
+      </article>
+
+      <article>
+        <h3>PrimaryAttack()</h3>
+        <p>Déclenche l’explosion après un délai. Définit le temps de début d’explosion côté client.</p>
+      </article>
+
+      <article>
+        <h3>CreateBombModel()</h3>
+        <p>Crée l’entité bombe (bouton GMod avec un modèle de grenade). Ne la spawn pas encore. Retourne l'entité créée.</p>
+      </article>
+
+      <article>
+        <h3>PlaceBombOnEntity(bomb, ent)</h3>
+        <p>Colle la bombe à une entité (parentage). Fixe la position relative et désactive la collision.</p>
+      </article>
+
+      <article>
+        <h3>PlaceBombOnGround(bomb, pos, ang)</h3>
+        <p>Place la bombe au sol avec une position et une orientation données. Désactive la physique.</p>
+      </article>
+
+      <article>
+        <h3>HandleUse(bomb, owner)</h3>
+        <p>Gère le comportement <code>Use</code> sur la bombe : récupération si le owner l'utilise, sinon tentative de désamorçage.</p>
+      </article>
+
+      <article>
+        <h3>RetrieveBomb(owner)</h3>
+        <p>Annule le plantage, enlève la bombe et notifie le joueur qu'il a récupéré sa bombe.</p>
+      </article>
+
+      <article>
+        <h3>StartDefuse(bomb, activator)</h3>
+        <p>Lance un timer de 5 secondes pour désamorcer la bombe. Si le joueur arrête de la viser, le désamorçage est annulé.</p>
+      </article>
+
+      <article>
+        <h3>SecondaryAttack()</h3>
+        <p>Permet de poser la bombe sur une entité proche ou au sol. Initialise <code>data.bomb</code> et <code>planted</code>.</p>
+      </article>
+
+    </section>
+    <section id="client">
+  <h1>Section Client</h1>
+
+  <h2>Affichage HUD</h2>
+
+  <article>
+    <h3>DrawHUD()</h3>
+    <p>Affiche des instructions contextuelles (clic gauche/droit, rechargement) et un compte à rebours si la bombe est en cours d’explosion.</p>
+  </article>
+
+  <article>
+    <h3>DrawHUDInstructions()</h3>
+    <p>Affiche des infos sur les actions disponibles selon l'état de la bombe (posée ou non).</p>
+  </article>
+
+  <article>
+    <h3>DrawHUDCountdown()</h3>
+    <p>Affiche un compte à rebours circulaire si la bombe explose bientôt. Tremble à la fin.</p>
+  </article>
+
+  <article>
+    <h3>GetViewModel()</h3>
+    <p>Renvoie le modèle à afficher selon que la bombe est posée ou non.</p>
+  </article>
+
+  <article>
+    <h3>TranslateViewModelModel(vm, model)</h3>
+    <p>Permet de changer dynamiquement le modèle de la viewmodel en fonction de l’état de la bombe.</p>
+  </article>
+
+  <h2>Interface Utilisateur</h2>
+
+  <article>
+    <h3>Reload()</h3>
+    <p>Déclenche l’ouverture d’un panneau de configuration du temps d’explosion (client seulement).</p>
+  </article>
+
+  <article>
+    <h3>OpenTimeInputPanel()</h3>
+    <p>Crée une fenêtre avec un slider pour choisir un délai d’explosion entre les valeurs autorisées. Envoie ensuite le temps choisi au serveur via <code>shareTimeBoomer</code>.</p>
+  </article>
+
+  <article>
+    <h3>HandleTimeInputConfirm(entry, minTime, maxTime)</h3>
+    <p>Valide le temps entré par l’utilisateur et l’envoie au serveur s’il est correct.</p>
+  </article>
+
+  <h2>Net Messages</h2>
+
+  <article>
+    <h3>net.Receive("boomer_defuse_start")</h3>
+    <p>Démarre une animation de désamorçage client avec une barre de progression.</p>
+  </article>
+
+  <article>
+    <h3>net.Receive("boomer_defuse_stop")</h3>
+    <p>Stoppe l’animation de désamorçage.</p>
+  </article>
+
+  <h2>3D2D Affichage</h2>
+
+  <article>
+    <h3>PostDrawOpaqueRenderables</h3>
+    <p>Affiche un texte au-dessus de la bombe si le joueur la regarde à moins de 100 unités.</p>
+    <ul>
+      <li>Propriétaire : "Appuyez sur E pour reprendre"</li>
+      <li>Autres joueurs : "Maintenez E et fixe 5s pour désamorcer"</li>
+    </ul>
+  </article>
+
+  <h2>Utilitaires Dessin</h2>
+
+  <article>
+    <h3>draw.Circle(x, y, radius, seg)</h3>
+    <p>Fonction utilitaire pour dessiner un cercle rempli.</p>
+  </article>
+
+  <article>
+    <h3>draw.CircleArc(x, y, radius, seg, startAngle, endAngle)</h3>
+    <p>Fonction utilitaire pour dessiner un arc de cercle (utilisé pour le compte à rebours).</p>
+  </article>
+
+  <h2>Shared</h2>
+
+  <article>
+    <h3>SWEP:GetAllowedTimeRange(ply)</h3>
+    <p>Renvoie les temps minimum et maximum autorisés pour le joueur (VIP ou non).</p>
+  </article>
+
+</section>
+
+  </main>
+</body>
+</html>
