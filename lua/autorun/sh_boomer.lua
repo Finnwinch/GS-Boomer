@@ -1,5 +1,6 @@
 local _realm = SERVER and "sv" or "cl"
 if SERVER then 
-    AddCSLuaFile("boomer/cl_boomer.lua")
+    AddCSLuaFile("gs_boomer/swep/cl_boomer.lua")
+    AddCSLuaFile("gs_boomer/swep/sh_builder.lua")
 end
-include("boomer/" .. _realm .. "_boomer.lua")
+include("gs_boomer/swep/sh_builder.lua")

@@ -1,26 +1,3 @@
-local SWEP = {}
-
-SWEP.Base = "weapon_fists"
-SWEP.Author = "Finnwinch"
-SWEP.PrintName = "Boomer"
-SWEP.Spawnable = true
-SWEP.UseHands = true
-SWEP.ViewModel = "models/weapons/cstrike/c_eq_fraggrenade.mdl"
-SWEP.WorldModel = "models/weapons/w_eq_fraggrenade.mdl"
-SWEP.HoldType = "normal"
-
- SWEP.NormalViewModel = "models/weapons/cstrike/c_eq_fraggrenade.mdl"
-    SWEP.PlantedViewModel = "models/props_junk/popcan01a.mdl"
-
-function SWEP:_getAllowedTimeRange(ply)
-    if not IsValid(ply) then return 10, 30 end
-    return ply:IsUserGroup("vip") and 0 or 10, ply:IsUserGroup("vip") and 60 or 30
-end
-
-function SWEP:GetAllowedTimeRange(ply)
-    return self:_getAllowedTimeRange(ply)
-end
-
 function SWEP:PrimaryAttack() return end
 function SWEP:SecondaryAttack() return end
 function SWEP:DrawWeaponSelection() end
@@ -135,7 +112,7 @@ end
 
 function SWEP:OpenTimeInputPanel()
     local ply = LocalPlayer()
-    local minTime, maxTime = self:GetAllowedTimeRange(ply)
+    local minTime, maxTime = self:_getAllowedTimeRange(ply)
 
     if self.TimeInputPanel and IsValid(self.TimeInputPanel) then
         self.TimeInputPanel:Remove()

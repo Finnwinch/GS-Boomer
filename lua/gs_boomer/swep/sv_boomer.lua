@@ -2,25 +2,6 @@ util.AddNetworkString("shareTimeBoomer")
 util.AddNetworkString("boomer_defuse_start")
 util.AddNetworkString("boomer_defuse_stop")
 
-local SWEP = {}
-
-SWEP.Base = "weapon_fists"
-SWEP.PrintName = "Boomer"
-SWEP.Spawnable = true
-SWEP.UseHands = true
-SWEP.ViewModel = "models/weapons/cstrike/c_eq_fraggrenade.mdl"
-SWEP.WorldModel = "models/weapons/w_eq_fraggrenade.mdl"
-SWEP.HoldType = "normal"
-
--- don't ask. same methode on sv and cl. because fuck sh. just copy paste
-function SWEP:_getAllowedTimeRange(ply)
-    if ply:IsUserGroup("vip") then
-        return 0, 60
-    else
-        return 10, 30
-    end
-end
-
 function SWEP:Initialize()
     self:ResetData()
 end
@@ -205,5 +186,3 @@ function SWEP:SecondaryAttack()
 
     self:SetNextSecondaryFire(CurTime() + 1)
 end
-
-weapons.Register(SWEP, "boomer_weapon")
